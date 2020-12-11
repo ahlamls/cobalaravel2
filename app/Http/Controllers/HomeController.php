@@ -70,6 +70,56 @@ class HomeController extends Controller
         return view('register',['username' => $uname]);
     }
 
+    public function handleregister(Request $request) {
+        $cl = $this->checkLogin($request);
+        $uid = $cl[0];
+        $uname = $cl[1];
+        if ($uid != 0) {
+            return redirect("/");
+            die();
+        }
+
+        $this->validate($request, [
+            'email' => 'required',
+            'username' => 'required',
+            'password' => 'required',
+            'passwordc' => 'required',
+        ]);
+        
+        $email = $request->input('email');
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $passwordc = $request->input('passwordc');
+
+        if ($password != $passwordc) {
+            return redirect("/register/?error=3");
+            die();
+        }
+        //check email
+        $emails = DB::select("select id from user WHERE `email` = '$email'  LIMIT 0,1");
+        foreach ($emails as $emai) {
+            return redirect("/register/?error=1");
+            die();
+        }
+        //check username
+        $usernames = DB::select("select id from user WHERE `username` = '$username'  LIMIT 0,1");
+        foreach ($usernames as $userna) {
+            return redirect("/register/?error=2");
+            die();
+        }
+        $hashed_pass = hash('sha512',$request->input('password'));
+        try {
+            DB::insert("INSERT INTO `user` (`id`, `time`, `username`, `password`, `email`, `bio`) VALUES (NULL, NOW(), '$username', '$hashed_pass', '$email', 'this user still use default bio');");
+        } catch (Exception $e){
+            return redirect('/login/?error=3');
+            die();
+        }
+        return redirect('/login/?error=2');
+        die();
+    }
+
+
+
     public function upload(Request $request) {
         $cl = $this->checkLogin($request);
         $uid = $cl[0];
@@ -80,6 +130,7 @@ class HomeController extends Controller
         }
         return view('upload',['username' => $uname]);
     }
+
 
     public function handleupload(Request $request) {
         $cl = $this->checkLogin($request);

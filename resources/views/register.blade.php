@@ -9,6 +9,10 @@
 <div class="alert alert-danger" role="alert">
   Username Already Taken . Please use a different one . if you believe your username is stolen please contact us
 </div>
+@elseif (request()->input('error') == 3) 
+<div class="alert alert-danger" role="alert">
+  Password confirmation isnt same . Please try again
+</div>
 @endif
 <form action="/register" method="POST">
 @csrf
@@ -26,7 +30,7 @@
 </div>
 <div class="mb-3">
   <label for="passwordc" class="form-label">Password (Confirmation)</label>
-  <input type="passwordc" class="form-control" id="passwordc" required="" name="passwordc" placeholder="123456 (most secure password)">
+  <input type="password" class="form-control" id="passwordc" required="" name="passwordc" placeholder="123456 (most secure password)">
 </div>
 <button class="btn btn-success">Register</button>
 </form>

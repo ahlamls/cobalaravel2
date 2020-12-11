@@ -5,6 +5,14 @@
 <div class="alert alert-danger" role="alert">
   Wrong Email or Password . Please Try Again
 </div>
+@elseif (request()->input('error') == 2) 
+<div class="alert alert-success" role="alert">
+  Register Successful! Please login using the credential that you just created
+</div>
+@elseif (request()->input('error') == 3) 
+<div class="alert alert-danger" role="alert">
+  Error occured during registration . please contact the developer
+</div>
 @endif
 <form action="/login" method="POST">
 @csrf
