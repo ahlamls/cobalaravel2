@@ -9,3 +9,4 @@
 
 </div>
 @include('modular/footer')
+@include('modular/homescript')

@@ -23,3 +23,8 @@ Route::get('/upload', [HomeController::class , 'upload']);
 Route::post('/upload', [HomeController::class , 'handleupload']);
 Route::get('/logout', [HomeController::class , 'logout']);
 Route::get('/u/{id}', [HomeController::class , 'profile']);
+Route::get('/p/{id}', [HomeController::class , 'post']);
+Route::post('/vote', [HomeController::class , 'vote']);
+Route::post('/getcomment', [HomeController::class , 'getcomment']);
+Route::post('/docomment', [HomeController::class , 'docomment']);
+Route::get('/setting', [HomeController::class , 'setting']);
