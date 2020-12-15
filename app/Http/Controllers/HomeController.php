@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use Image;
 use Illuminate\Http\Request;
-
+use URL;
 class HomeController extends Controller
 {
     public function checkLogin($request)
@@ -43,6 +43,11 @@ class HomeController extends Controller
             return redirect("/");
             die();
         }
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
         $email = e($request->input('email'));
         $password = hash('sha512', $request->input('password'));
         $users = DB::select("select * from user WHERE `email` = '$email' AND `password` = '$password' LIMIT 0,1");
@@ -87,8 +92,8 @@ class HomeController extends Controller
         }
 
         $this->validate($request, [
-            'email' => 'required',
-            'username' => 'required',
+            'email' => 'required|email',
+            'username' => 'required|alpha_num',
             'password' => 'required',
             'passwordc' => 'required',
         ]);
@@ -165,7 +170,7 @@ class HomeController extends Controller
 
         $this->validate($request, [
             'caption' => 'required',
-            'file' => 'required',
+            'file' => 'required|image',
         ]);
 
         $file = $request->file('file');
@@ -181,7 +186,7 @@ class HomeController extends Controller
                 $image_url = "/image/" . $filename;
                 DB::insert("INSERT INTO `image` (`id`, `user_id`, `time`, `caption`, `vote`, `commentcount`, `image_url`, `hidden`) VALUES (NULL, '$uid', current_timestamp(), '$caption', '0', '0', '$image_url', '0');");
                 $post_id = DB::getPdo()->lastInsertId();;
-                $web_url = $request->getSchemeAndHttpHost() ;
+                $web_url = URL::to('/');
               
                 $usernames = DB::select('select * from user WHERE `id` = ' . $uid);
                 $username = "unknown";
@@ -242,8 +247,8 @@ class HomeController extends Controller
         }
 
         $this->validate($request, [
-            'type' => 'required',
-            'id' => 'required',
+            'type' => 'required|integer',
+            'id' => 'required|integer',
         ]);
 
         $post_id = e($request->input('id'));
@@ -364,7 +369,7 @@ class HomeController extends Controller
         }
 
         $this->validate($request, [
-            'id' => 'required',
+            'id' => 'required|integer',
             'comment' => 'required',
         ]);
         $post_id = e($request->input('id'));
@@ -469,10 +474,11 @@ class HomeController extends Controller
         $cl = $this->checkLogin($request);
         $uid = $cl[0];
         $uname = $cl[1];
-     
+        
+        $npid = 0;
         $npid = e($request->input('np')); //next post id
         $eq = "";
-        if ($npid != 0) {
+        if ($npid !=  "") {
             $eq = " AND `id` < '$npid' ";
         }
         $images = DB::select("select * from image WHERE `hidden` = 0 $eq ORDER BY `id` DESC LIMIT 0,10");
@@ -497,6 +503,7 @@ class HomeController extends Controller
         $uid = $cl[0];
         $uname = $cl[1];
 
+        
         $images = DB::select('select * from image WHERE `hidden` = 0 AND `id` = ' . "'" . $id  . "'" . ' ORDER BY `id` DESC');
         $title = "No Post Found";
         $content = "";
@@ -525,7 +532,7 @@ class HomeController extends Controller
 
         $npid = e($request->input('np')); //next post id
         $eq = "";
-        if ($npid != 0) {
+        if ($npid !=  "") {
             $eq = " AND `id` < '$npid' ";
         }
 
@@ -576,8 +583,12 @@ class HomeController extends Controller
         $npid = e($request->input('np')); //next post id
         $q = e($request->input('q')); //next post id
         
+        $this->validate($request, [
+            'q' => 'required',
+        ]);
+
         $eq = "";
-        if ($npid != 0) {
+        if ($npid !=  "") {
             $eq = " AND `id` < '$npid' ";
         }
         $images = DB::select("select * from image WHERE `hidden` = 0 $eq AND `caption` LIKE '%$q%'  ORDER BY `id` DESC LIMIT 0,10");
@@ -646,6 +657,10 @@ class HomeController extends Controller
             return redirect("/login");
             die();
         }
+
+        $this->validate($request, [
+            'bio' => 'required',
+        ]);
 
         $bio = e($request->input('bio'));
         try {
