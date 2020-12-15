@@ -4,9 +4,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+    <link rel="icon" type="image/png" href="/logo.png" />
     <!-- Dark Mode-->
-    @if (request()->cookie('darkmode') == 0)
+    @if (request()->cookie('darkmode') == 1)
     <style>
     body {
       background:#000000 !important;

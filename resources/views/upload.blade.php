@@ -1,6 +1,13 @@
 @include('modular/header')
 <h1>Upload</h1>
+<p class="text-muted">Daily Post Limit {{$curpost}}/{{$postlimit}}</p>
 <hr>
+@if ($curpost >= $postlimit) 
+<div class="alert alert-danger" role="alert">
+  All your daily post quotas are used . please wait until tomorrow
+</div>
+
+@else
 @if (request()->input('error') == 1) 
 <div class="alert alert-danger" role="alert">
   Invalid File
@@ -23,4 +30,5 @@
 <button class="btn btn-success">Upload</button>
 <label class="text-muteds">By Clicking the Upload Button . you are agreeing to the Terms of Service of the site</label>
 </form>
+@endif
 @include('modular/footer')
