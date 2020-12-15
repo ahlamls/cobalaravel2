@@ -80,12 +80,12 @@ color:#ffffff !important;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     @if (!isset($title))  
-    <title>Coba Laravel 2</title>
+    <title>asede</title>
     @else 
-  <title>{{$title}} - Coba Laravel 2</title>
+  <title>{{$title}} - asede</title>
     @endif
 
-    <Meta Content="Coba Laravel 2 is an image sharing website . all registered user can share the image that they like to share" Name=’Description’/>
+    <Meta Content="asede adalah situs untuk berbagi gambar tanpa rasa khawatir di report , kami mendukung free speech" Name=’Description’/>
   </head>
   <body>
   @include('modular/navbar')
