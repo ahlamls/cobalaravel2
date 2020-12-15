@@ -186,7 +186,7 @@ class HomeController extends Controller
                 $image_url = "/image/" . $filename;
                 DB::insert("INSERT INTO `image` (`id`, `user_id`, `time`, `caption`, `vote`, `commentcount`, `image_url`, `hidden`) VALUES (NULL, '$uid', current_timestamp(), '$caption', '0', '0', '$image_url', '0');");
                 $post_id = DB::getPdo()->lastInsertId();;
-                $web_url = URL::to('/');
+                $web_url = env("APP_URL");
               
                 $usernames = DB::select('select * from user WHERE `id` = ' . $uid);
                 $username = "unknown";
