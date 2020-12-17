@@ -29,5 +29,6 @@ Route::post('/getcomment', [HomeController::class , 'getcomment']);
 Route::post('/docomment', [HomeController::class , 'docomment']);
 Route::get('/setting', [HomeController::class , 'setting']);
 Route::post('/setting', [HomeController::class , 'handlesetting']);
+Route::get('/deletepost/{id}', [HomeController::class , 'handleDelete']);
 Route::get('/setcookie/{id}', [HomeController::class , 'setCookie']);
 Route::get('/search', [HomeController::class , 'search']);

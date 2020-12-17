@@ -142,6 +142,16 @@ function doComment(id) {
     xmlhttp.send(JSON.stringify(data));
 }
 
+function salim() {
+    alert("asw kang ripot");
+}
+
+function deletepost(id) {
+    if (confirm("Are you sure to delete this post? this action cannot be undone")) {
+        window.location.href= "/deletepost/" + id;
+    }
+
+}
 var clipboard = new ClipboardJS('#cpbtn');
 
 

@@ -440,6 +440,12 @@ class HomeController extends Controller
         } else {
             $verifiedh = "";
         }
+
+        $deletecontent = "";
+        if ($uid == $post->user_id) {
+            $deletecontent = "<a class='btn btn-sm btn-link' onclick='deletepost($post->id)'>Delete Post</a>";
+        }
+
         $content .= "
         <div class='card'>
          <div class='card-header'><i class='fas fa-user'></i>  <a class='link' href='/u/$username'><b>$username</b></a> $verifiedh |  <span class='text-muteds'><i class='fas fa-clock'></i>  $post->time</span></div>
@@ -457,8 +463,10 @@ class HomeController extends Controller
                     <button class='btn btn-sm $dvb marg' id='dvb$post->id' onclick='downvote($post->id)'><i class='fas fa-arrow-down'></i> Down</button>
                     <button class='btn btn-sm btn-primary marg' id='cb$post->id' onclick='comment($post->id)'>Comment($post->commentcount)</button>
                     <button class='btn btn-sm btn-info marg' id='cpbtn'  data-clipboard-text='" . $request->getSchemeAndHttpHost() ."/p/$post->id'><i class='far fa-copy'></i> Link</button>
-              
+                    $deletecontent
+                    <a class='btn btn-sm btn-link' onclick='salim()'>Report</a>
                     </p>
+                   
             </div>
         </div>
         </div>
@@ -511,7 +519,7 @@ class HomeController extends Controller
         $lastid = '0';
         foreach ($images as $post) {
             $content .= $this->content($post,$uid,$uname,$request);
-            
+            $title = $post->caption;
         }
 
         if ($content == "") {
@@ -538,6 +546,7 @@ class HomeController extends Controller
 
         $profiles = DB::select('select * from user WHERE `username` = "' . $username . '" LIMIT 0,1');
         $username = "Unknown";
+        $title = "User Not Found";
         $exist = false;
         $id = 0;
         $verified = 0;
@@ -547,6 +556,7 @@ class HomeController extends Controller
             $pid = $usernam->id;
             $exist = true;
             $verified = $usernam->verified;
+            $title = "/u/" . $username;
         }
         if (!$exist) {
             return redirect("/");
@@ -559,6 +569,7 @@ class HomeController extends Controller
         foreach ($images as $post) {
             $content .= $this->content($post,$uid,$uname,$request);
             $lastid = $post->id;
+            
         }
 
         if ($content == "") {
@@ -571,7 +582,7 @@ class HomeController extends Controller
 
         }
 
-        return view('profile', ['content' => $content, 'username' => $uname, 'profiles' => $profiles ,'lastpost' => $lastid]);
+        return view('profile', ['content' => $content, 'username' => $uname, 'profiles' => $profiles ,'lastpost' => $lastid,'title' => $title]);
 
     }
 
@@ -671,6 +682,22 @@ class HomeController extends Controller
             return redirect("/setting/?error=2");
             die();
         }
+    }
+
+    public function handleDelete(Request $request,$id) {
+        $cl = $this->checkLogin($request);
+        $uid = $cl[0];
+        $uname = $cl[1];
+        if ($uid == 0) {
+            return redirect("/login");
+            die();
+        }
+        
+        $id = e($id);
+
+        DB::delete("DELETE FROM `image` WHERE `id` = '$id' AND `user_id` = '$uid'");
+
+        return redirect()->back();
     }
 
 }
